@@ -3,32 +3,7 @@
 <template>
 <div></div>
 
-  <div>
-    <br>
-    {{pricelist}}
-    <br>
-    <br>
-    <br>
-  </div>
 
-<!--  <table class="table">-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--      <th>From Planet</th>-->
-<!--      <th class="text-center">To Planet</th>-->
-<!--      <th class="text-center">Distance between</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-
-<!--    <tbody>-->
-<!--    <tr v-for="item in fetchRoutes" :key="item">-->
-<!--      <td>{{ item.from.name }}</td>-->
-<!--      <td class="text-center">{{  item.to.name }}</td>-->
-<!--      <td class="text-center">{{  item.distance }}</td>-->
-
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--  </table>-->
 
   <div>
     <h2>Select Origin and Destination</h2>
