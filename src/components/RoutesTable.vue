@@ -28,9 +28,8 @@
 
     <!-- Display Selected Values -->
     <div v-if="selectedFrom && selectedTo" class="selected-info">
-      <p>You selected:</p>
-      <p>From: {{ selectedFrom }}</p>
-      <p>To: {{ selectedTo }}</p>
+      <p>You selected your trip: </p>
+      <p>From: <strong>{{ selectedFrom }}</strong>   To: <strong>{{ selectedTo }}</strong></p>
     </div>
 
     <!-- Button to Search for Routes -->
@@ -47,6 +46,7 @@
           <th>Company</th>
           <th>Flight Start</th>
           <th>Flight End</th>
+          <th>Travel Time</th>
           <th>Distance</th>
           <th>Price</th>
 
@@ -57,6 +57,7 @@
           <td>{{ result.companyName }}</td>
           <td>{{ formatDate(result.flightStart) }}</td>
           <td>{{ formatDate(result.flightEnd) }}</td>
+          <td>{{ calculateTravelTime(result.flightStart, result.flightEnd) }}</td> <!-- Travel Time Column -->
           <td>{{ result.distance }}</td>
           <td>{{ formatPrice(result.price) }}</td>
 
@@ -143,9 +144,23 @@ export default {
                 console.error("Error searching routes:", error);
               });
         },
-      formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleString(); // Format as local date and time
+      formatDate(date) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        return new Date(date).toLocaleDateString(undefined, options);
+      },
+      calculateTravelTime(flightStart, flightEnd) {
+        const startDate = new Date(flightStart);
+        const endDate = new Date(flightEnd);
+
+        // Calculate the difference in milliseconds
+        const diffInMilliseconds = endDate - startDate;
+
+        // Convert milliseconds to hours and minutes
+        const hours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
+        const minutes = Math.floor((diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+
+        // Return formatted travel time
+        return `${hours}h ${minutes}m`;
       },
       formatPrice(price) {
         return `$${price.toFixed(2)}`; // Format price as currency
