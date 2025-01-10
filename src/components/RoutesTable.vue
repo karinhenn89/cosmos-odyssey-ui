@@ -32,6 +32,43 @@
       <p>From: {{ selectedFrom }}</p>
       <p>To: {{ selectedTo }}</p>
     </div>
+
+    <!-- Button to Search for Routes -->
+    <button :disabled="!selectedFrom || !selectedTo" @click="searchRoutes">
+      Search Routes
+    </button>
+
+    <!-- Table to Display Search Results -->
+    <div v-if="searchResults.length">
+      <h3>Search Results</h3>
+      <table border="1">
+        <thead>
+        <tr>
+          <th>Company</th>
+          <th>Flight Start</th>
+          <th>Flight End</th>
+          <th>Distance</th>
+          <th>Price</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(result, index) in searchResults" :key="index">
+          <td>{{ result.companyName }}</td>
+          <td>{{ formatDate(result.flightStart) }}</td>
+          <td>{{ formatDate(result.flightEnd) }}</td>
+          <td>{{ result.distance }}</td>
+          <td>{{ formatPrice(result.price) }}</td>
+
+
+
+
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+
   </div>
 
 
@@ -48,7 +85,8 @@ export default {
     fromOptions: [],
     toOptions: [],
     selectedFrom: '',
-    selectedTo: ''
+    selectedTo: '',
+    searchResults: []
   }),
   computed: {
     // Enable the search button only if both dropdowns have a value
@@ -80,46 +118,44 @@ export default {
             .catch((error) => {
               console.error("Error fetching to options:", error);
             });
-      }
-    },
-      fetchLocations() {
-        //   axios.get(`${this.routesApi}/routes/locations`)
-        //       .then(res => {
-        //
-        //         // Extract fromOptions and toOptions from the response
-        //         this.fromOptions = res.data.fromOptions;
-        //         this.toOptions = res.data.toOptions;
-        //       })
-        //       .catch(error => {
-        //         console.error('Error fetching routes:', error);
-        //       });
-        // },
-        // searchRoutes(){
-        //   // Perform the search logic here
-        //   console.log("Searching for routes from", this.selectedFrom, "to", this.selectedTo);
-        //
-        //   // You can add logic to make another API call for searching routes
-        //   axios.get(`${this.routesApi}/routes/search`, {
-        //     params: {
-        //       fromName: this.selectedFrom,
-        //       toName: this.selectedTo
-        //     }
-        //   })
-        //       .then(res => {
-        //         console.log("Search Results:", res.data);
-        //       })
-        //       .catch(error => {
-        //         console.error('Error searching routes:', error);
-        //       });
-        // }
       },
+
+        searchRoutes(){
+
+          console.log("Searching for routes from", this.selectedFrom, "to", this.selectedTo);
+
+          if (!this.selectedFrom || !this.selectedTo) {
+            console.error("From and To fields must be selected");
+            return;
+          }
+
+          axios.get(`${this.routesApi}/getproviders`, {
+            params: {
+              fromName: this.selectedFrom,
+              toName: this.selectedTo,
+            },
+          })
+              .then(res => {
+                console.log("Search Results:", res.data);
+                this.searchResults = res.data; // Update the search results
+              })
+              .catch(error => {
+                console.error("Error searching routes:", error);
+              });
+        },
+      formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString(); // Format as local date and time
+      },
+      formatPrice(price) {
+        return `$${price.toFixed(2)}`; // Format price as currency
+      },
+    },
     mounted() {
-      //this.fetchLocations();
       this.fetchFromOptions();
-      //this.fetchToOptions();
       // this.pricelistIsValid();
     },
-  }
+  };
 
 </script>
 
