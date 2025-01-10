@@ -10,7 +10,7 @@
 
     <!-- Dropdown for Origin (fromOptions) -->
     <label for="from">From:</label>
-    <select v-model="selectedFrom" id="from">
+    <select v-model="selectedFrom" id="from" @change="fetchToOptions">
       <option value="" disabled>Select origin</option>
       <option v-for="from in fromOptions" :key="from" :value="from">
         {{ from }}
@@ -19,7 +19,7 @@
 
     <!-- Dropdown for Destination (toOptions) -->
     <label for="to">To:</label>
-    <select v-model="selectedTo" id="to">
+    <select v-model="selectedTo" id="to" :disabled="!selectedFrom">
       <option value="" disabled>Select destination</option>
       <option v-for="to in toOptions" :key="to" :value="to">
         {{ to }}
@@ -57,40 +57,66 @@ export default {
     },
   },
     methods: {
-      fetchLocations() {
-        axios.get(`${this.routesApi}/routes/locations`)
-            .then(res => {
-
-              // Extract fromOptions and toOptions from the response
-              this.fromOptions = res.data.fromOptions;
-              this.toOptions = res.data.toOptions;
+      fetchFromOptions() {
+        axios
+            .get(`${this.routesApi}/routes/locations`) // Backend endpoint for fetching all origins
+            .then((res) => {
+              this.fromOptions = res.data.fromOptions || []; // Populate fromOptions
             })
-            .catch(error => {
-              console.error('Error fetching routes:', error);
+            .catch((error) => {
+              console.error("Error fetching from options:", error);
             });
       },
-      searchRoutes() {
-        // Perform the search logic here
-        console.log("Searching for routes from", this.selectedFrom, "to", this.selectedTo);
 
-        // You can add logic to make another API call for searching routes
-        axios.get(`${this.routesApi}/routes/search`, {
-          params: {
-            fromName: this.selectedFrom,
-            toName: this.selectedTo
-          }
-        })
-            .then(res => {
-              console.log("Search Results:", res.data);
+      // Fetch "toOptions" based on selected origin
+      fetchToOptions() {
+        if (!this.selectedFrom) return; // Ensure an origin is selected
+
+        axios
+            .get(`${this.routesApi}/routes/locations/${this.selectedFrom}`) // Backend endpoint for fetching destinations
+            .then((res) => {
+              this.toOptions = res.data.toOptions || []; // Populate toOptions
             })
-            .catch(error => {
-              console.error('Error searching routes:', error);
+            .catch((error) => {
+              console.error("Error fetching to options:", error);
             });
       }
-
     },
+      fetchLocations() {
+        //   axios.get(`${this.routesApi}/routes/locations`)
+        //       .then(res => {
+        //
+        //         // Extract fromOptions and toOptions from the response
+        //         this.fromOptions = res.data.fromOptions;
+        //         this.toOptions = res.data.toOptions;
+        //       })
+        //       .catch(error => {
+        //         console.error('Error fetching routes:', error);
+        //       });
+        // },
+        // searchRoutes(){
+        //   // Perform the search logic here
+        //   console.log("Searching for routes from", this.selectedFrom, "to", this.selectedTo);
+        //
+        //   // You can add logic to make another API call for searching routes
+        //   axios.get(`${this.routesApi}/routes/search`, {
+        //     params: {
+        //       fromName: this.selectedFrom,
+        //       toName: this.selectedTo
+        //     }
+        //   })
+        //       .then(res => {
+        //         console.log("Search Results:", res.data);
+        //       })
+        //       .catch(error => {
+        //         console.error('Error searching routes:', error);
+        //       });
+        // }
+      },
     mounted() {
-      this.fetchLocations();
+      //this.fetchLocations();
+      this.fetchFromOptions();
+      //this.fetchToOptions();
       // this.pricelistIsValid();
     },
   }
