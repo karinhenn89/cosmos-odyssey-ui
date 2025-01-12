@@ -146,9 +146,7 @@ export default {
         } else if (this.sortOption === "distance") {
           return a.distance - b.distance;
         } else if (this.sortOption === "travelTime") {
-          const travelTimeA = this.calculateTravelTime(a.flightStart, a.flightEnd);
-          const travelTimeB = this.calculateTravelTime(b.flightStart, b.flightEnd);
-          return travelTimeA - travelTimeB;
+          return a.travelTimeMs - b.travelTimeMs; // Use precomputed travel time in ms
         }
       });
 
@@ -198,7 +196,10 @@ export default {
           })
               .then(res => {
                 console.log("Search Results:", res.data);
-                this.searchResults = res.data; // Update the search results
+                this.searchResults = res.data.map(result => ({
+                  ...result,
+                  travelTimeMs: new Date(result.flightEnd) - new Date(result.flightStart), // Precompute travel time in ms
+                }));
               })
               .catch(error => {
                 console.error("Error searching routes:", error);
