@@ -40,6 +40,35 @@
     <!-- Table to Display Search Results -->
     <div v-if="searchResults.length">
       <h3>Search Results</h3>
+
+      <!-- Filter Input -->
+      <div>
+        <label for="companyFilterDropdown">Filter by Company:</label>
+        <select id="companyFilterDropdown" v-model="companyFilter">
+          <option value="">All Companies</option> <!-- Default option to show all companies -->
+          <option
+              v-for="(company, index) in uniqueCompanies"
+              :key="index"
+              :value="company"
+          >
+            {{ company }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Sort Options -->
+      <div>
+        <label for="sortOption">Sort by:</label>
+        <select id="sortOption" v-model="sortOption">
+          <option value="price">Price</option>
+          <option value="distance">Distance</option>
+          <option value="travelTime">Travel Time</option>
+        </select>
+      </div>
+
+
+
+
       <table border="1">
         <thead>
         <tr>
@@ -53,7 +82,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(result, index) in searchResults" :key="index">
+        <tr v-for="(result, index) in filteredAndSortedResults" :key="index">
           <td>{{ result.companyName }}</td>
           <td>{{ formatDate(result.flightStart) }}</td>
           <td>{{ formatDate(result.flightEnd) }}</td>
@@ -87,12 +116,43 @@ export default {
     toOptions: [],
     selectedFrom: '',
     selectedTo: '',
-    searchResults: []
+    searchResults: [],
+    companyFilter:"",
+    sortOption: "price"
   }),
   computed: {
     // Enable the search button only if both dropdowns have a value
     canSearch() {
       return this.selectedFrom && this.selectedTo;
+    },
+    uniqueCompanies() {
+      // Get a list of unique company names from searchResults
+      const companies = this.searchResults.map((result) => result.companyName);
+      return [...new Set(companies)]; // Remove duplicates
+    },
+    filteredAndSortedResults() {
+      // Apply filtering
+      let results = this.searchResults.filter((result) => {
+        if (this.companyFilter === "") {
+          return true; // No filter applied, include all results
+        }
+        return result.companyName === this.companyFilter; // Match selected company
+      });
+
+      // Apply sorting
+      results.sort((a, b) => {
+        if (this.sortOption === "price") {
+          return a.price - b.price;
+        } else if (this.sortOption === "distance") {
+          return a.distance - b.distance;
+        } else if (this.sortOption === "travelTime") {
+          const travelTimeA = this.calculateTravelTime(a.flightStart, a.flightEnd);
+          const travelTimeB = this.calculateTravelTime(b.flightStart, b.flightEnd);
+          return travelTimeA - travelTimeB;
+        }
+      });
+
+      return results;
     },
   },
     methods: {
