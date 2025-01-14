@@ -72,6 +72,7 @@
       <table border="1">
         <thead>
         <tr>
+          <th>validUntil</th>
           <th>Company</th>
           <th>Flight Start</th>
           <th>Flight End</th>
@@ -83,24 +84,82 @@
         </thead>
         <tbody>
         <tr v-for="(result, index) in filteredAndSortedResults" :key="index">
+          <td>{{ result.validUntil }}</td>
           <td>{{ result.companyName }}</td>
           <td>{{ formatDate(result.flightStart) }}</td>
           <td>{{ formatDate(result.flightEnd) }}</td>
           <td>{{ calculateTravelTime(result.flightStart, result.flightEnd) }}</td> <!-- Travel Time Column -->
           <td>{{ result.distance }}</td>
           <td>{{ formatPrice(result.price) }}</td>
-
-
-
+          <td>
+            <button @click="addRouteToReservation(result)">Reserve</button>
+          </td>
 
         </tr>
         </tbody>
       </table>
     </div>
 
+    <div>
+      <form @submit.prevent="saveReservation">
+        <label>First Name:</label>
+        <input v-model="reservation.firstName" required />
 
+        <label>Last Name:</label>
+        <input v-model="reservation.lastName" required />
+
+        <button type="submit">Save Reservation</button>
+      </form>
+
+    </div>
   </div>
 
+
+  <div>
+    <h3>Current Reservation</h3>
+    <label>First Name:</label>
+    <input v-model="reservation.firstName" type="text" placeholder="Enter First Name" />
+    <br />
+    <label>Last Name:</label>
+    <input v-model="reservation.lastName" type="text" placeholder="Enter Last Name" />
+    <br />
+    <button @click="clearReservation">Clear Reservation</button>
+
+    <table border="1">
+      <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Routes</th>
+        <th>Total Price</th>
+        <th>Total Travel Time</th>
+        <th>Companies</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{{ reservation.firstName }}</td>
+        <td>{{ reservation.lastName }}</td>
+        <td>
+          <ul>
+            <li v-for="(route, index) in reservation.routes" :key="index">
+              {{ route }}
+            </li>
+          </ul>
+        </td>
+        <td>{{ formatPrice(reservation.totalQuotedPrice) }}</td>
+        <td>{{ reservation.totalQuotedTravelTime }}</td>
+        <td>
+          <ul>
+            <li v-for="(company, index) in reservation.companyNames" :key="index">
+              {{ company }}
+            </li>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
 </template>
 
@@ -112,13 +171,22 @@ import axios from "axios";
 export default {
   data: () => ({
     routesApi: "http://localhost:8090/api",
+    reservationsApi: "http://localhost:8090/api/reservations",
     fromOptions: [],
     toOptions: [],
     selectedFrom: '',
     selectedTo: '',
     searchResults: [],
     companyFilter:"",
-    sortOption: "price"
+    sortOption: "price",
+    reservation: {
+      firstName:'',
+      lastName:'',
+      routes:[],
+      totalQuotedPrice: 0,
+      totalQuotedTravelTime: '0h 0m',
+      companyNames: []
+    }
   }),
   computed: {
     // Enable the search button only if both dropdowns have a value
@@ -209,6 +277,8 @@ export default {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         return new Date(date).toLocaleDateString(undefined, options);
       },
+
+      //for one single route
       calculateTravelTime(flightStart, flightEnd) {
         const startDate = new Date(flightStart);
         const endDate = new Date(flightEnd);
@@ -223,9 +293,55 @@ export default {
         // Return formatted travel time
         return `${hours}h ${minutes}m`;
       },
+      // Method to add travel times
+      addTravelTimes(totalTime, additionalTime) {
+        // Parse total time (e.g., "5h 30m")
+        const [totalHours, totalMinutes] = totalTime.match(/\d+/g).map(Number);
+
+        // Parse additional time (e.g., "2h 45m")
+        const [additionalHours, additionalMinutes] = additionalTime.match(/\d+/g).map(Number);
+
+        // Calculate total minutes and hours
+        let minutes = totalMinutes + additionalMinutes;
+        let hours = totalHours + additionalHours + Math.floor(minutes / 60);
+        minutes %= 60;
+
+        // Return formatted time string
+        return `${hours}h ${minutes}m`;
+      },
+
       formatPrice(price) {
         return `$${price.toFixed(2)}`; // Format price as currency
       },
+
+      addRouteToReservation(route) {
+        this.reservation.routes.push(`${this.selectedFrom} - ${this.selectedTo}`);
+        this.reservation.totalQuotedPrice += route.price;
+        this.reservation.companyNames.push(route.companyName);
+
+        // Calculate total travel time
+        const travelTime = this.calculateTravelTime(route.flightStart, route.flightEnd);
+        this.reservation.totalQuotedTravelTime = this.addTravelTimes(
+            this.reservation.totalQuotedTravelTime,
+            travelTime
+        );
+      },
+
+      saveReservation() {
+        console.log('Reservation to be sent:', this.reservation);
+        // Call API to save reservation
+        axios.post(`${this.reservationsApi}/add`, this.reservation)
+            .then(response => {
+              console.log('Server Response:', response.data);
+              alert('Reservation saved successfully!');
+            })
+            .catch(error => {
+              console.error('Error saving reservation:', error);
+            });
+      }
+
+
+
     },
     mounted() {
       this.fetchFromOptions();
