@@ -185,7 +185,8 @@ export default {
       routes:[],
       totalQuotedPrice: 0,
       totalQuotedTravelTime: '0h 0m',
-      companyNames: []
+      companyNames: [],
+      validUntil: ''
     }
   }),
   computed: {
@@ -318,6 +319,7 @@ export default {
         this.reservation.routes.push(`${this.selectedFrom} - ${this.selectedTo}`);
         this.reservation.totalQuotedPrice += route.price;
         this.reservation.companyNames.push(route.companyName);
+        this.reservation.validUntil = route.validUntil;
 
         // Calculate total travel time
         const travelTime = this.calculateTravelTime(route.flightStart, route.flightEnd);
@@ -325,6 +327,17 @@ export default {
             this.reservation.totalQuotedTravelTime,
             travelTime
         );
+      },
+
+      clearReservation() {
+        this.reservation = {
+          firstName: '',
+          lastName: '',
+          routes: [],
+          totalQuotedPrice: 0,
+          totalQuotedTravelTime: '0h 0m',
+          companyNames: []
+        }
       },
 
       saveReservation() {
