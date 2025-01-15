@@ -1,11 +1,15 @@
 
 
 <template>
+<div class = "container">
+  <h3 class="text-center mb-4">Confirmed Reservations</h3>
+</div>
 
-  <div class="container" style="background-color: #f8f9fa;">
-  <table class="table table-bordered table-hover" style="width: 100%; table-layout: auto;">
+  <div class="container" style="background-color: #f8f9fa; padding: 0px; margin: 20px">
+    <div style="overflow-x: auto; width: 100%;">
+    <table class="table table-bordered table-hover" style="width: 100%; table-layout: auto;">
 
-    <thead>
+    <thead class="table-dark">
       <tr>
         <th>Reservation nr</th>
         <th>First Name</th>
@@ -18,8 +22,8 @@
     </thead>
 
     <tbody>
-      <tr v-for="(reservation, index) in reservations" :key="reservation.id">
-        <td>{{ index + 1 }}</td>
+      <tr v-for="(reservation) in reservations" :key="reservation.id">
+        <td>{{ reservation.id }}</td>
         <td>{{ reservation.firstName }}</td>
         <td>{{ reservation.lastName }}</td>
         <td>
@@ -40,6 +44,7 @@
     </tbody>
 
   </table>
+  </div>
 </div>
 </template>
 
@@ -67,5 +72,36 @@ export default {
 
 
 <style scoped>
+.table {
+  width: 90%;
+  table-layout: auto;
+  border-collapse: collapse;
+  justify-content: center;
+}
+.container {
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+.table th {
+  background-color: rgba(28, 83, 104, 0.96);
+}
+.container {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+  th, td {
+    padding: 8px; /* Adjust padding for smaller screens */
+  }
+}
 
 </style>

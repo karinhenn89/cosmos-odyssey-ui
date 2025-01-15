@@ -79,7 +79,7 @@
           </div>
 
       <!-- Sort Options -->
-          <div class="col-md-6 d-flex align-items-center">
+          <div class="col-md-6 rounded d-flex align-items-center">
              <label for="sortOption" class="me-2">Sort by:</label>
              <select id="sortOption" v-model="sortOption" class="form-select">
                 <option value="price">Price</option>
@@ -94,7 +94,7 @@
 
 
 
-        <div class="container" style="background-color: #f8f9fa;">
+        <div class="container rounded" style="background-color: #f8f9fa;">
           <div style="overflow-x: auto; width: 100%;">
           <table class="table table-bordered table-hover" style="width: 100%; table-layout: auto;">
 
@@ -134,7 +134,7 @@
         </div>
       </div>
 
-      <div class="container" style="background-color: #f8f9fa;">
+      <div class="container" style="background-color: #f8f9fa; padding: 30px;">
         <h3>Current Reservation Details</h3>
 
         <table style="border: 1px solid; margin: 0 auto; padding: 30px;">
@@ -173,22 +173,28 @@
         </table>
       </div>
 
-    <div class="my-4">
+    <div class="container col-md- rounded shadow-sm" style="background-color: #f8f9fa; padding: 30px;">
       <form @submit.prevent="saveReservation" class="bg-light p-4 rounded shadow-sm">
         <h4>Reserve Your Trip</h4>
-          <div class="mb-3">
-            <label for="firstName" class="form-label">First Name:</label>
-            <input v-model="reservation.firstName" id="firstName" class="form-control" required />
+          <div class="row justify-content-center">
+            <div class="col-md-4">
+              <label for="firstName" class="form-label">First Name:</label>
+              <input v-model="reservation.firstName" id="firstName" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+              <label for="lastName" class="form-label">Last Name:</label>
+               <input v-model="reservation.lastName" id="lastName" class="form-control" required />
           </div>
 
-        <div class="mb-3">
-          <label for="lastName" class="form-label">Last Name:</label>
-          <input v-model="reservation.lastName" id="lastName" class="form-control" required />
-        </div>
-        <div class="mb-3">
-          <button type="submit" class="btn btn-outline-primary btn-sm">Save Reservation</button>
-          <button @click="clearReservation" class="btn btn-outline-danger btn-sm">Clear Reservation</button>
-        </div>
+          </div>
+          <div class="row justify-content-center" style="padding-top: 35px;">
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary btn-sm">Save Reservation</button>
+            </div>
+            <div class="col-md-2">
+              <button @click="clearReservation" class="btn btn-outline-danger btn-sm">Clear Reservation</button>
+            </div>
+          </div>
       </form>
     </div>
 
