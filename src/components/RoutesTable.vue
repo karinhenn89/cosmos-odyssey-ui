@@ -12,9 +12,9 @@
       <!-- Origin Dropdown -->
       <div class="col-md-6">
     <!-- Dropdown for Origin (fromOptions) -->
-    <label for="from" class="form-label">From:</label>
+    <label for="from" class="form-label">Choose a planet to fly from: </label>
     <select v-model="selectedFrom" id="from" class="form-select" @change="fetchToOptions">
-      <option value="" disabled>Select origin</option>
+      <option value="" disabled>From:</option>
       <option v-for="from in fromOptions" :key="from" :value="from">
         {{ from }}
       </option>
@@ -23,9 +23,9 @@
 
     <!-- Dropdown for Destination (toOptions) -->
       <div class="col-md-6">
-        <label for="to">To:</label>
+        <label for="to">Choose a planet to fly to: </label>
         <select v-model="selectedTo" id="to" class="form-select" :disabled="!selectedFrom">
-          <option value="" disabled>Select destination</option>
+          <option value="" disabled>To: </option>
           <option v-for="to in toOptions" :key="to" :value="to">
             {{ to }}
            </option>
