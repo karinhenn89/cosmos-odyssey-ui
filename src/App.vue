@@ -25,5 +25,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  margin-bottom: 60px;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  margin-left: 60px;
+  margin-right: 60px;
 }
+
 </style>

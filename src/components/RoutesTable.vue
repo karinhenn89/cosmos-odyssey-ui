@@ -1,165 +1,202 @@
 
 
 <template>
-<div></div>
-
 
 
   <div>
-    <h2>Select Origin and Destination</h2>
+  <div class="container my-5 p-4 rounded shadow-lg" style="background-color: #f8f9fa;">
+    <h3 class="text-center mb-4">Select Origin and Destination</h3>
+    <br>
 
+    <div class="row g-3 align-items-center mb-4">
+      <!-- Origin Dropdown -->
+      <div class="col-md-6">
     <!-- Dropdown for Origin (fromOptions) -->
-    <label for="from">From:</label>
-    <select v-model="selectedFrom" id="from" @change="fetchToOptions">
+    <label for="from" class="form-label">From:</label>
+    <select v-model="selectedFrom" id="from" class="form-select" @change="fetchToOptions">
       <option value="" disabled>Select origin</option>
       <option v-for="from in fromOptions" :key="from" :value="from">
         {{ from }}
       </option>
     </select>
+      </div>
 
     <!-- Dropdown for Destination (toOptions) -->
-    <label for="to">To:</label>
-    <select v-model="selectedTo" id="to" :disabled="!selectedFrom">
-      <option value="" disabled>Select destination</option>
-      <option v-for="to in toOptions" :key="to" :value="to">
-        {{ to }}
-      </option>
+      <div class="col-md-6">
+        <label for="to">To:</label>
+        <select v-model="selectedTo" id="to" class="form-select" :disabled="!selectedFrom">
+          <option value="" disabled>Select destination</option>
+          <option v-for="to in toOptions" :key="to" :value="to">
+            {{ to }}
+           </option>
     </select>
-
+      </div>
+    </div>
+    <!-- Button to Search for Routes -->
+    <div class="text-center mt-4">
+      <button :disabled="!selectedFrom || !selectedTo"
+            @click="searchRoutes"
+            class="btn btn-outline-primary px-4"
+          >
+            Search Routes
+      </button>
+    </div>
+    <br>
     <!-- Display Selected Values -->
     <div v-if="selectedFrom && selectedTo" class="selected-info">
       <p>You selected your trip: </p>
       <p>From: <strong>{{ selectedFrom }}</strong>   To: <strong>{{ selectedTo }}</strong></p>
     </div>
 
-    <!-- Button to Search for Routes -->
-    <button :disabled="!selectedFrom || !selectedTo" @click="searchRoutes">
-      Search Routes
-    </button>
+    </div>
+
+
+
+
+
 
     <!-- Table to Display Search Results -->
     <div v-if="searchResults.length">
-      <h3>Search Results</h3>
+      <h3 class="mb-4">Search Results</h3>
 
       <!-- Filter Input -->
-      <div>
-        <label for="companyFilterDropdown">Filter by Company:</label>
-        <select id="companyFilterDropdown" v-model="companyFilter">
-          <option value="">All Companies</option> <!-- Default option to show all companies -->
-          <option
-              v-for="(company, index) in uniqueCompanies"
-              :key="index"
-              :value="company"
-          >
-            {{ company }}
-          </option>
-        </select>
-      </div>
+
+      <div class="container my-4 p-3 rounded shadow-sm" style="background-color: #f8f9fa;">
+        <div class="row g-3 align-items-center">
+          <!-- Filter by Company -->
+          <div class="col-md-6 d-flex align-items-center">
+            <label for="companyFilterDropdown" class="me-2">Filter by Company:</label>
+            <select id="companyFilterDropdown" v-model="companyFilter" class="form-select">
+              <option value="">All Companies</option> <!-- Default option to show all companies -->
+              <option
+                 v-for="(company, index) in uniqueCompanies"
+                 :key="index"
+                 :value="company"
+                >
+                {{ company }}
+              </option>
+           </select>
+          </div>
 
       <!-- Sort Options -->
-      <div>
-        <label for="sortOption">Sort by:</label>
-        <select id="sortOption" v-model="sortOption">
-          <option value="price">Price</option>
-          <option value="distance">Distance</option>
-          <option value="travelTime">Travel Time</option>
-        </select>
+          <div class="col-md-6 d-flex align-items-center">
+             <label for="sortOption" class="me-2">Sort by:</label>
+             <select id="sortOption" v-model="sortOption" class="form-select">
+                <option value="price">Price</option>
+                <option value="distance">Distance</option>
+                <option value="travelTime">Travel Time</option>
+           </select>
+          </div>
+        </div>
       </div>
 
 
 
 
-      <table border="1">
-        <thead>
-        <tr>
-          <th>validUntil</th>
-          <th>Company</th>
-          <th>Flight Start</th>
-          <th>Flight End</th>
-          <th>Travel Time</th>
-          <th>Distance</th>
-          <th>Price</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(result, index) in filteredAndSortedResults" :key="index">
-          <td>{{ result.validUntil }}</td>
-          <td>{{ result.companyName }}</td>
-          <td>{{ formatDate(result.flightStart) }}</td>
-          <td>{{ formatDate(result.flightEnd) }}</td>
-          <td>{{ calculateTravelTime(result.flightStart, result.flightEnd) }}</td> <!-- Travel Time Column -->
-          <td>{{ result.distance }}</td>
-          <td>{{ formatPrice(result.price) }}</td>
-          <td>
-            <button @click="addRouteToReservation(result)">Reserve</button>
-          </td>
+        <div class="container" style="background-color: #f8f9fa;">
+          <div style="overflow-x: auto; width: 100%;">
+          <table class="table table-bordered table-hover" style="width: 100%; table-layout: auto;">
 
-        </tr>
-        </tbody>
-      </table>
-    </div>
+            <thead class="table-dark">
+              <tr>
+<!--                <th>validUntil</th>-->
+                <th>Company</th>
+                <th>Flight Start</th>
+                <th>Flight End</th>
+                <th>Travel Time</th>
+                <th>Distance</th>
+                <th>Price</th>
+                <th>Book a trip</th>
+              </tr>
+            </thead>
 
-    <div>
-      <form @submit.prevent="saveReservation">
-        <label>First Name:</label>
-        <input v-model="reservation.firstName" required />
+            <tbody>
+              <tr v-for="(result, index) in filteredAndSortedResults" :key="index">
+<!--                <td>{{ result.validUntil }}</td>-->
+                <td>{{ result.companyName }}</td>
+                <td>{{ formatDate(result.flightStart) }}</td>
+                <td>{{ formatDate(result.flightEnd) }}</td>
+                <td>{{ calculateTravelTime(result.flightStart, result.flightEnd) }}</td> <!-- Travel Time Column -->
+                <td>{{ result.distance }}</td>
+                <td>{{ formatPrice(result.price) }}</td>
+                <td>
+                  <button @click="addRouteToReservation(result)"
+                          class="btn btn-outline-primary btn-sm"
+                          >
+                          Reserve
+                  </button>
+                </td>
 
-        <label>Last Name:</label>
-        <input v-model="reservation.lastName" required />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-        <button type="submit">Save Reservation</button>
+      <div class="container" style="background-color: #f8f9fa;">
+        <h3>Current Reservation Details</h3>
+
+        <table style="border: 1px solid; margin: 0 auto; padding: 30px;">
+          <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Routes</th>
+            <th>Total Price</th>
+            <th>Total Travel Time</th>
+            <th>Companies</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{ reservation.firstName }}</td>
+            <td>{{ reservation.lastName }}</td>
+            <td>
+              <ul>
+                <li v-for="(route, index) in reservation.routes" :key="index">
+                  {{ route }}
+                </li>
+              </ul>
+            </td>
+            <td>{{ formatPrice(reservation.totalQuotedPrice) }}</td>
+            <td>{{ reservation.totalQuotedTravelTime }}</td>
+            <td>
+              <ul>
+                <li v-for="(company, index) in reservation.companyNames" :key="index">
+                  {{ company }}
+                </li>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    <div class="my-4">
+      <form @submit.prevent="saveReservation" class="bg-light p-4 rounded shadow-sm">
+        <h4>Reserve Your Trip</h4>
+          <div class="mb-3">
+            <label for="firstName" class="form-label">First Name:</label>
+            <input v-model="reservation.firstName" id="firstName" class="form-control" required />
+          </div>
+
+        <div class="mb-3">
+          <label for="lastName" class="form-label">Last Name:</label>
+          <input v-model="reservation.lastName" id="lastName" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-outline-primary btn-sm">Save Reservation</button>
+          <button @click="clearReservation" class="btn btn-outline-danger btn-sm">Clear Reservation</button>
+        </div>
       </form>
-
     </div>
+
+  </div>
   </div>
 
 
-  <div>
-    <h3>Current Reservation</h3>
-    <label>First Name:</label>
-    <input v-model="reservation.firstName" type="text" placeholder="Enter First Name" />
-    <br />
-    <label>Last Name:</label>
-    <input v-model="reservation.lastName" type="text" placeholder="Enter Last Name" />
-    <br />
-    <button @click="clearReservation">Clear Reservation</button>
 
-    <table border="1">
-      <thead>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Routes</th>
-        <th>Total Price</th>
-        <th>Total Travel Time</th>
-        <th>Companies</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>{{ reservation.firstName }}</td>
-        <td>{{ reservation.lastName }}</td>
-        <td>
-          <ul>
-            <li v-for="(route, index) in reservation.routes" :key="index">
-              {{ route }}
-            </li>
-          </ul>
-        </td>
-        <td>{{ formatPrice(reservation.totalQuotedPrice) }}</td>
-        <td>{{ reservation.totalQuotedTravelTime }}</td>
-        <td>
-          <ul>
-            <li v-for="(company, index) in reservation.companyNames" :key="index">
-              {{ company }}
-            </li>
-          </ul>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
 
 </template>
 
@@ -366,19 +403,41 @@ export default {
 
 <style scoped>
 .table {
-  width: 100%;
+  width: 90%;
+  table-layout: auto;
   border-collapse: collapse;
   justify-content: center;
-  display: flex;
-  overflow-x: auto;
 }
+
+.container {
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.table-wrapper {
+  overflow-x: auto; /* Allow horizontal scrolling when necessary */
+  width: 100%; /* Ensure the wrapper takes up the full width of the container */
+}
+
 .table th,
 .table td {
   border: 1px solid #ddd;
   padding: 10px;
-  width: 300px;
+
 }
 .table th {
-  background-color: #f4f4f4;
+  background-color: rgba(28, 83, 104, 0.96);
+}
+.container {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+  th, td {
+    padding: 8px; /* Adjust padding for smaller screens */
+  }
 }
 </style>
