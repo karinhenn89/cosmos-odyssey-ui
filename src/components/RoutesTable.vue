@@ -11,7 +11,6 @@
     <div class="row g-3 align-items-center mb-4">
       <!-- Origin Dropdown -->
       <div class="col-md-6">
-    <!-- Dropdown for Origin (fromOptions) -->
         <label for="from" class="form-label">Choose a planet to fly from: </label>
         <select v-model="selectedFrom" id="from" class="form-select" @change="fetchToOptions">
           <option value="" disabled>From:</option>
@@ -50,16 +49,9 @@
 
     </div>
 
-
-
-
-
-
     <!-- Table to Display Search Results -->
     <div v-if="searchResults.length">
       <h3 class="mb-4">Search Results</h3>
-
-      <!-- Filter Input -->
 
       <div class="container my-4 p-3 rounded shadow-sm" style="background-color: #f8f9fa;">
         <div class="row g-3 align-items-center">
@@ -67,7 +59,7 @@
           <div class="col-md-6 d-flex align-items-center">
             <label for="companyFilterDropdown" class="me-2">Filter by Company:</label>
             <select id="companyFilterDropdown" v-model="companyFilter" class="form-select">
-              <option value="">All Companies</option> <!-- Default option to show all companies -->
+              <option value="">All Companies</option>
               <option
                  v-for="(company, index) in uniqueCompanies"
                  :key="index"
@@ -91,16 +83,12 @@
       </div>
 
 
-
-
-
         <div class="container rounded" style="background-color: #f8f9fa;">
           <div style="overflow-x: auto; width: 100%;">
           <table class="table table-bordered table-hover" style="width: 100%; table-layout: auto;">
 
             <thead class="table-dark">
               <tr>
-<!--                <th>validUntil</th>-->
                 <th>Company</th>
                 <th>Flight Start</th>
                 <th>Flight End</th>
@@ -113,7 +101,6 @@
 
             <tbody>
               <tr v-for="(result, index) in filteredAndSortedResults" :key="index">
-<!--                <td>{{ result.validUntil }}</td>-->
                 <td>{{ result.companyName }}</td>
                 <td>{{ formatDate(result.flightStart) }}</td>
                 <td>{{ formatDate(result.flightEnd) }}</td>
@@ -136,46 +123,46 @@
 
       <div class="container-fluid py-4" style="background-color: #f8f9fa;">
         <div class="container">
-        <h3 class="text-center mb-4">Current Reservation Details</h3>
+          <h3 class="text-center mb-4">Current Reservation Details</h3>
 
           <div class="table-responsive">
           <table class="table table-bordered table-hover">
-          <thead class="table-dark">
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Routes</th>
-            <th>Total Price</th>
-            <th>Total Travel Time</th>
-            <th>Companies</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>{{ reservation.firstName }}</td>
-            <td>{{ reservation.lastName }}</td>
-            <td>
-              <ul class="mb-0">
-                <li v-for="(route, index) in reservation.routes" :key="index">
-                  {{ route }}
-                </li>
-              </ul>
-            </td>
-            <td>{{ formatPrice(reservation.totalQuotedPrice) }}</td>
-            <td>{{ reservation.totalQuotedTravelTime }}</td>
-            <td>
-              <ul class="mb-0">
-                <li v-for="(company, index) in reservation.companyNames" :key="index">
-                  {{ company }}
-                </li>
-              </ul>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+            <thead class="table-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Routes</th>
+                <th>Total Price</th>
+                <th>Total Travel Time</th>
+                <th>Companies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ reservation.firstName }}</td>
+                <td>{{ reservation.lastName }}</td>
+                <td>
+                  <ul class="mb-0">
+                    <li v-for="(route, index) in reservation.routes" :key="index">
+                      {{ route }}
+                    </li>
+                  </ul>
+                </td>
+                <td>{{ formatPrice(reservation.totalQuotedPrice) }}</td>
+                <td>{{ reservation.totalQuotedTravelTime }}</td>
+                <td>
+                  <ul class="mb-0">
+                    <li v-for="(company, index) in reservation.companyNames" :key="index">
+                      {{ company }}
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      </div>
-      </div>
+    </div>
 
     <div class="container col-md- rounded shadow-sm" style="background-color: #f8f9fa; padding: 30px;">
       <form @submit.prevent="saveReservation" class="bg-light p-4 rounded shadow-sm">
@@ -205,9 +192,6 @@
   </div>
   </div>
 
-
-
-
 </template>
 
 
@@ -217,8 +201,8 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    routesApi: "http://localhost:8090/api",
-    reservationsApi: "http://localhost:8090/api/reservations",
+    routesApi: "https://your-backend-app-name.herokuapp.com/api",
+    reservationsApi: "https://your-backend-app-name.herokuapp.com/api/reservations",
     fromOptions: [],
     toOptions: [],
     selectedFrom: '',
@@ -423,11 +407,6 @@ export default {
 .container {
   padding: 20px;
   margin: 0 auto;
-}
-
-.table-wrapper {
-  overflow-x: auto; /* Allow horizontal scrolling when necessary */
-  width: 100%; /* Ensure the wrapper takes up the full width of the container */
 }
 
 .table th,
