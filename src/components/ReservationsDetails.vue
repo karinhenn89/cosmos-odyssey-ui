@@ -54,7 +54,7 @@
 
 <script>
 import axios from 'axios';
-import { API } from '@/apiConfig'; // Import the API config
+import { API } from '../apiConfig.js'; // Import the API config
 
 export default {
   data: () => ({
