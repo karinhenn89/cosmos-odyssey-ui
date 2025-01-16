@@ -4,10 +4,14 @@
 <div class = "container">
   <h3 class="text-center mb-4">Confirmed Reservations</h3>
 </div>
+  <p class="lead">
+    You can find your confirmed Reservations from this page.  <br><br>
+    Older-ones are on top and new orders are on the bottom.
+  </p>
 
-  <div class="container" style="background-color: #f8f9fa; padding: 0px; margin: 20px">
-    <div style="overflow-x: auto; width: 100%;">
-    <table class="table table-bordered table-hover" style="width: 100%; table-layout: auto;">
+  <div class="container my-4 p-3 rounded shadow-sm" style="background-color: #f8f9fa;">
+    <div class="table-responsive">
+    <table class="table table-bordered table-hover">
 
     <thead class="table-dark">
       <tr>
@@ -27,7 +31,7 @@
         <td>{{ reservation.firstName }}</td>
         <td>{{ reservation.lastName }}</td>
         <td>
-          <ul>
+          <ul class="mb-0">
             <li v-for="route in reservation.routes" :key="route">{{ route }}</li>
           </ul>
         </td>
@@ -35,7 +39,7 @@
         <td>{{ reservation.totalQuotedTravelTime }}</td>
 
         <td>
-          <ul>
+          <ul class="mb-0">
             <li v-for="company in reservation.companyNames" :key="company">{{ company }}</li>
           </ul>
         </td>
@@ -73,7 +77,7 @@ export default {
 
 <style scoped>
 .table {
-  width: 90%;
+  width: 100%;
   table-layout: auto;
   border-collapse: collapse;
   justify-content: center;

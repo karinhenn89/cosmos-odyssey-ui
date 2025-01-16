@@ -1,26 +1,39 @@
 
 
 <template>
-  <div id="navbar" class="container-fluid">
-    <div class="image-container">
-      <img :src="imagePath" alt="Cosmos" class="responsive-image">>
+  <div id="navbar" class="container-fluid p-0">
 
+    <div class="image-container text-center py-2">
+      <img :src="imagePath" alt="Cosmos" class="responsive-image img-fluid" />
     </div>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light w-100 navbar-custom ">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item active">
-              <router-link to="/" class="nav-link fs-5 border-secondary border-end">Home</router-link>
+            <li class="nav-item">
+              <router-link to="/" class="nav-link fs-6 border-secondary border-end px-3">Home</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/reservations" class="nav-link fs-5 border-secondary border-end">Reservations</router-link>
+              <router-link to="/reservations" class="nav-link fs-6 border-secondary border-end px-3">Reservations</router-link>
             </li>
           </ul>
         </div>
-
-      </nav>
-
+      </div>
+    </nav>
   </div>
 </template>
 

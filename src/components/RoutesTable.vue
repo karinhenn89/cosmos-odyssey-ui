@@ -12,24 +12,24 @@
       <!-- Origin Dropdown -->
       <div class="col-md-6">
     <!-- Dropdown for Origin (fromOptions) -->
-    <label for="from" class="form-label">Choose a planet to fly from: </label>
-    <select v-model="selectedFrom" id="from" class="form-select" @change="fetchToOptions">
-      <option value="" disabled>From:</option>
-      <option v-for="from in fromOptions" :key="from" :value="from">
-        {{ from }}
-      </option>
-    </select>
+        <label for="from" class="form-label">Choose a planet to fly from: </label>
+        <select v-model="selectedFrom" id="from" class="form-select" @change="fetchToOptions">
+          <option value="" disabled>From:</option>
+          <option v-for="from in fromOptions" :key="from" :value="from">
+            {{ from }}
+          </option>
+         </select>
       </div>
 
     <!-- Dropdown for Destination (toOptions) -->
       <div class="col-md-6">
-        <label for="to">Choose a planet to fly to: </label>
+        <label for="to" class="form-label">Choose a planet to fly to: </label>
         <select v-model="selectedTo" id="to" class="form-select" :disabled="!selectedFrom">
           <option value="" disabled>To: </option>
           <option v-for="to in toOptions" :key="to" :value="to">
             {{ to }}
-           </option>
-    </select>
+          </option>
+        </select>
       </div>
     </div>
     <!-- Button to Search for Routes -->
@@ -134,11 +134,13 @@
         </div>
       </div>
 
-      <div class="container" style="background-color: #f8f9fa; padding: 30px;">
-        <h3>Current Reservation Details</h3>
+      <div class="container-fluid py-4" style="background-color: #f8f9fa;">
+        <div class="container">
+        <h3 class="text-center mb-4">Current Reservation Details</h3>
 
-        <table style="border: 1px solid; margin: 0 auto; padding: 30px;">
-          <thead>
+          <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+          <thead class="table-dark">
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
@@ -153,7 +155,7 @@
             <td>{{ reservation.firstName }}</td>
             <td>{{ reservation.lastName }}</td>
             <td>
-              <ul>
+              <ul class="mb-0">
                 <li v-for="(route, index) in reservation.routes" :key="index">
                   {{ route }}
                 </li>
@@ -162,7 +164,7 @@
             <td>{{ formatPrice(reservation.totalQuotedPrice) }}</td>
             <td>{{ reservation.totalQuotedTravelTime }}</td>
             <td>
-              <ul>
+              <ul class="mb-0">
                 <li v-for="(company, index) in reservation.companyNames" :key="index">
                   {{ company }}
                 </li>
@@ -171,6 +173,8 @@
           </tr>
           </tbody>
         </table>
+      </div>
+      </div>
       </div>
 
     <div class="container col-md- rounded shadow-sm" style="background-color: #f8f9fa; padding: 30px;">
@@ -370,6 +374,7 @@ export default {
             this.reservation.totalQuotedTravelTime,
             travelTime
         );
+        alert('Added to Reservation. Scroll down');
       },
 
       clearReservation() {
@@ -389,11 +394,12 @@ export default {
         axios.post(`${this.reservationsApi}/add`, this.reservation)
             .then(response => {
               console.log('Server Response:', response.data);
-              alert('Reservation saved successfully!');
+              alert('Reservation saved successfully! You can find it under the Reservations page!');
             })
             .catch(error => {
               console.error('Error saving reservation:', error);
             });
+        this.clearReservation();
       }
 
 
@@ -401,7 +407,6 @@ export default {
     },
     mounted() {
       this.fetchFromOptions();
-      // this.pricelistIsValid();
     },
   };
 
@@ -409,7 +414,7 @@ export default {
 
 <style scoped>
 .table {
-  width: 90%;
+  width: 100%;
   table-layout: auto;
   border-collapse: collapse;
   justify-content: center;
