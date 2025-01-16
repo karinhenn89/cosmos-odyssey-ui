@@ -197,7 +197,7 @@
 
 <script>
 import axios from "axios";
-import { API } from '../apiConfig';
+import { API } from '@/apiConfig';
 
 export default {
   data: () => ({
