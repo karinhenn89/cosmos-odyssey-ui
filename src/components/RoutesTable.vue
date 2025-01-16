@@ -201,8 +201,8 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    routesApi: "https://your-backend-app-name.herokuapp.com/api",
-    reservationsApi: "https://your-backend-app-name.herokuapp.com/api/reservations",
+    routesApi: "https://cosmos-odyseyy-ef9a41470ec5.herokuapp.com/api",
+    reservationsApi: "https://cosmos-odyseyy-ef9a41470ec5.herokuapp.com/api/reservations",
     fromOptions: [],
     toOptions: [],
     selectedFrom: '',

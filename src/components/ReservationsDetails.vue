@@ -57,7 +57,7 @@ import axios from 'axios';
 
 export default {
   data: () => ({
-    reservationsApi: "https://your-backend-app-name.herokuapp.com/api/reservations",
+    reservationsApi: "https://cosmos-odyseyy-ef9a41470ec5.herokuapp.com/api/reservations",
       reservations: [],
     }),
 
