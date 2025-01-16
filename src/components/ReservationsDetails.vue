@@ -54,10 +54,11 @@
 
 <script>
 import axios from 'axios';
+import { API } from '@/apiConfig'; // Import the API config
 
 export default {
   data: () => ({
-    reservationsApi: "https://cosmos-odyseyy-ef9a41470ec5.herokuapp.com/api/reservations",
+    reservationsApi: API.reservationsApi,
       reservations: [],
     }),
 

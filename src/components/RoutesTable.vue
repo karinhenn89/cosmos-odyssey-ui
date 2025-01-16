@@ -197,12 +197,12 @@
 
 <script>
 import axios from "axios";
-
+import { API } from '@/apiConfig';
 
 export default {
   data: () => ({
-    routesApi: "https://cosmos-odyseyy-ef9a41470ec5.herokuapp.com/api",
-    reservationsApi: "https://cosmos-odyseyy-ef9a41470ec5.herokuapp.com/api/reservations",
+    routesApi: API.routesApi,
+    reservationsApi: API.reservationsApi,
     fromOptions: [],
     toOptions: [],
     selectedFrom: '',
