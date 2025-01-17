@@ -256,7 +256,7 @@ export default {
     methods: {
       fetchFromOptions() {
         axios
-            .get(`${this.routesApi}/routes/locations`) // Backend endpoint for fetching all origins
+            .get(`${this.routesApi}/locations`) // Backend endpoint for fetching all origins
             .then((res) => {
               this.fromOptions = res.data.fromOptions || []; // Populate fromOptions
             })
