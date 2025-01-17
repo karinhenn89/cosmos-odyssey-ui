@@ -270,7 +270,7 @@ export default {
         if (!this.selectedFrom) return; // Ensure an origin is selected
 
         axios
-            .get(`${this.routesApi}/routes/locations/${this.selectedFrom}`) // Backend endpoint for fetching destinations
+            .get(`${this.routesApi}/locations/${this.selectedFrom}`) // Backend endpoint for fetching destinations
             .then((res) => {
               this.toOptions = res.data.toOptions || []; // Populate toOptions
             })
