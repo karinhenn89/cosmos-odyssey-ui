@@ -24,12 +24,24 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-  margin-bottom: 60px;
-  text-align: center;
-  -webkit-font-smoothing: antialiased;
-  margin-left: 60px;
-  margin-right: 60px;
+
+  /* Default margins for larger screens */
+  margin: 60px;
+}
+
+/* Adjust margins for smaller screens */
+@media (max-width: 768px) {
+  #app {
+    margin: 20px; /* Reduce margins on mobile */
+    text-align: left; /* Optional: Align text to the left for readability */
+  }
+}
+
+@media (max-width: 480px) {
+  #app {
+    margin: 10px; /* Further reduce margins for very small screens */
+    font-size: 14px; /* Adjust font size if needed */
+  }
 }
 
 </style>
